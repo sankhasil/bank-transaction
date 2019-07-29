@@ -14,12 +14,12 @@ import com.transaction.analysis.engine.TransactionReader;
  */
 public class Execution {
 
-static URI fileInputPath,fileOutputPath;
+static URI inputPath,outputPath;
 	public static void main(String[] args) {
 		try {
 			processCommandLineArguments(args);
 			TransactionReader transReader = new TransactionReader();
-			transReader.ReadFiles(fileInputPath);
+			transReader.readTransactions(inputPath);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -48,14 +48,14 @@ static URI fileInputPath,fileOutputPath;
 			case "-inputpath=":
 			case "-InputPath=":
 			case "-INPUTPATH=":
-				setPath(arg,fileInputPath);
+				setPath(arg,inputPath);
 				break;
 			case "-o=":
 			case "-O=":
 			case "-outputpath=":
 			case "-OutputPath=":
 			case "-OUTPUTPATH=":
-				setPath(arg,fileOutputPath);
+				setPath(arg,outputPath);
 				break;
 
 
