@@ -6,6 +6,7 @@ import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +22,15 @@ public class TransactionReader {
 	private static final char DEFAULT_SEPARATOR = ',';
 	private static final char DEFAULT_QUOTE = '"';
 	private static final String TRANSACTION_FILE = "transactions.csv";
-	private final AnalysisEngine analysisEngine = new AnalysisEngine();
+	private final AnalysisEngine analysisEngine = AnalysisEngine.getInstance();
 
-	public void readTransactions(URI filePath) {
+	public void readTransactions(String filePath) {
 		File folder = new File(filePath);
 		if (folder.isDirectory() && folder.listFiles().length > 0) {
 
-			try (Scanner scanner = new Scanner(Paths.get(filePath.getPath().isEmpty()
+			try (Scanner scanner = new Scanner(Paths.get(filePath.isEmpty()
 					? ClassLoader.getSystemResource("csv/transactions.csv").toURI()
-					: new URI(filePath.getPath() + FileSystems.getDefault().getSeparator() + TRANSACTION_FILE)));) {
+					: new File(filePath + FileSystems.getDefault().getSeparator() + TRANSACTION_FILE).toURI()));) {
 				int count = 0;
 				List<Transaction> transactionList = new ArrayList<>();
 				while (scanner.hasNext()) {
@@ -48,17 +49,17 @@ public class TransactionReader {
 				analysisEngine.setListOfTransaction(transactionList);
 
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 
 	}
 	
-	public void readBankLogs(URI filePath,String bankCode) {
+	public void readBankLogs(String filePath,String bankCode) {
 
 			try (Scanner scanner = new Scanner(Paths.get(filePath));) {
 				int count = 0;
-				Map<String,BankLog> bankLogMap = new HashMap<>();
+				List<BankLog> bankLogList = new ArrayList<>();
 				while (scanner.hasNext()) {
 					count++;
 					List<String> line = parseLine(scanner.nextLine());
@@ -69,11 +70,12 @@ public class TransactionReader {
 					bankLog.setTransactionSource(line.get(2));
 					bankLog.setTransactionDestination(line.get(3));
 					bankLog.setTransactionAmount(BigDecimal.valueOf(Double.parseDouble(line.get(4))));
-					bankLog.setTransactionCategory(line.get(5));
-					bankLogMap.put(bankCode, bankLog);
+					bankLog.setTransactionCurrency(Currency.getInstance(line.get(5)));
+					bankLog.setTransactionCategory(line.get(6));
+					bankLogList.add(bankLog);
 
 				}
-				analysisEngine.setBankLogsMap(bankLogMap);
+				analysisEngine.getBankLogsMap().put(bankCode, bankLogList);
 
 			} catch (Exception e) {
 

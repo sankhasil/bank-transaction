@@ -11,12 +11,20 @@ import com.transaction.analysis.model.BankBase;
  * @author Sankha
  *
  */
-public class Statistics extends BankBase {
+public class Statistics {
 
 	private String category;
+	private String currency;
 	private BigDecimal totalAmount;
 	private Long transactionCount;
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 	public String getCategory() {
 		return category;
 	}

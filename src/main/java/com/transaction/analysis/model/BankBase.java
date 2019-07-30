@@ -11,5 +11,13 @@ import java.util.Currency;
  */
 public class BankBase extends Base {
 
-	private Currency currency;
+	private String currency;
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 }

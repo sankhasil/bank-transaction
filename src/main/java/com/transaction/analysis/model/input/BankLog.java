@@ -1,6 +1,7 @@
 package com.transaction.analysis.model.input;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.UUID;
 
 import com.transaction.analysis.model.BankBase;
@@ -17,6 +18,7 @@ public class BankLog extends BankBase {
 	private String transactionDestination;
 	private BigDecimal transactionAmount;
 	private String transactionCategory;
+	private Currency transactionCurrency;
 	
 	public UUID getTransactionId() {
 		return transactionId;
@@ -47,6 +49,12 @@ public class BankLog extends BankBase {
 	}
 	public void setTransactionCategory(String transactionCategory) {
 		this.transactionCategory = transactionCategory;
+	}
+	public Currency getTransactionCurrency() {
+		return transactionCurrency;
+	}
+	public void setTransactionCurrency(Currency transactionCurrency) {
+		this.transactionCurrency = transactionCurrency;
 	}
 
 }

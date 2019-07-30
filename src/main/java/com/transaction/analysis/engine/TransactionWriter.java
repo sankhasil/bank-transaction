@@ -32,58 +32,57 @@ public class TransactionWriter {
 
 	public boolean writeBankResultToFile(String outputFilePath, List<Bank> bankDataList) {
 		File folderPath = new File(outputFilePath);
-		if (folderPath.isDirectory()) {
+		
+		if (!folderPath.isDirectory()) {
+			folderPath.mkdir();
+		}
 
 			Path filePath = Paths.get(folderPath.getAbsolutePath() + folderPath.separatorChar + BANK_RESULT_FILENAME);
 			String content = this.toCSV(bankDataList, DEFAULT_SEPARATOR, false);
 			try {
-				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.APPEND);
+				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE,StandardOpenOption.APPEND);
 				return banksFile.isAbsolute();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return false;
 			}
-		}
 
-		return false;
 	}
 
 	public boolean writeDailyBalanceResultToFile(String outputFilePath, List<DailyBalance> dailyBalanceList,String bankCode) {
 		File folderPath = new File(outputFilePath);
-		if (folderPath.isDirectory()) {
 
+		if (!folderPath.isDirectory()) {
+			folderPath.mkdir();
+		}
 			Path filePath = Paths.get(folderPath.getAbsolutePath() + folderPath.separatorChar + bankCode+DAILY_BALANCE_RESULT_FILENAME);
 			String content = this.toCSV(dailyBalanceList, DEFAULT_SEPARATOR, false);
 			try {
-				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.APPEND);
+				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE_NEW,StandardOpenOption.APPEND);
 				return banksFile.isAbsolute();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return false;
 			}
-		}
 
-		return false;
 	}
 	public boolean writeCategoriesResultToFile(String outputFilePath, List<Statistics> statisticsList,String bankCode) {
 		File folderPath = new File(outputFilePath);
-		if (folderPath.isDirectory()) {
+		if (!folderPath.isDirectory()) {
+			folderPath.mkdir();
+		}
 
 			Path filePath = Paths.get(folderPath.getAbsolutePath() + folderPath.separatorChar + bankCode+CATEGORIES_RESULT_FILENAME);
 			String content = this.toCSV(statisticsList, DEFAULT_SEPARATOR, false);
 			try {
-				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.APPEND);
+				Path banksFile = Files.write(filePath, content.getBytes(), StandardOpenOption.CREATE,StandardOpenOption.APPEND);
 				return banksFile.isAbsolute();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return false;
 			}
-		}
-
-		return false;
 	}
 	private String toCSV(List<?> objectList, char separator, boolean displayHeader) {
 
@@ -149,7 +148,6 @@ public class TransactionWriter {
 						csvRow.append(separator).append(value);
 					}
 					field.setAccessible(false);
-
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					LOGGER.severe(e.toString());
 				}
