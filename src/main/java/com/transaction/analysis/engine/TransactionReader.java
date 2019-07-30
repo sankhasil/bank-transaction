@@ -6,7 +6,9 @@ import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -52,11 +54,11 @@ public class TransactionReader {
 
 	}
 	
-	public void readBankLogs(URI filePath) {
+	public void readBankLogs(URI filePath,String bankCode) {
 
 			try (Scanner scanner = new Scanner(Paths.get(filePath));) {
 				int count = 0;
-				List<BankLog> bankLogList = new ArrayList<>();
+				Map<String,BankLog> bankLogMap = new HashMap<>();
 				while (scanner.hasNext()) {
 					count++;
 					List<String> line = parseLine(scanner.nextLine());
@@ -68,10 +70,10 @@ public class TransactionReader {
 					bankLog.setTransactionDestination(line.get(3));
 					bankLog.setTransactionAmount(BigDecimal.valueOf(Double.parseDouble(line.get(4))));
 					bankLog.setTransactionCategory(line.get(5));
-					bankLogList.add(bankLog);
+					bankLogMap.put(bankCode, bankLog);
 
 				}
-				analysisEngine.setListOfBankLogs(bankLogList);
+				analysisEngine.setBankLogsMap(bankLogMap);
 
 			} catch (Exception e) {
 

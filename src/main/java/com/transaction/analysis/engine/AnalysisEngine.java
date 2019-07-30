@@ -4,6 +4,7 @@
 package com.transaction.analysis.engine;
 
 import java.util.List;
+import java.util.Map;
 
 import com.transaction.analysis.model.input.BankLog;
 import com.transaction.analysis.model.input.Transaction;
@@ -15,19 +16,19 @@ import com.transaction.analysis.model.input.Transaction;
 public class AnalysisEngine {
 	
 	 private List<Transaction> listOfTransaction;
-	 private List<BankLog> listOfBankLogs;
+	 private Map<String,BankLog> bankLogsMap;
 	public List<Transaction> getListOfTransaction() {
 		return listOfTransaction;
 	}
 	public void setListOfTransaction(List<Transaction> listOfTransaction) {
 		this.listOfTransaction = listOfTransaction;
 	}
-	public List<BankLog> getListOfBankLogs() {
-		return listOfBankLogs;
+	public Map<String, BankLog> getBankLogsMap() {
+		return bankLogsMap;
 	}
-	public void setListOfBankLogs(List<BankLog> listOfBankLogs) {
-		this.listOfBankLogs = listOfBankLogs;
+	public void setBankLogsMap(Map<String, BankLog> bankLogsMap) {
+		this.bankLogsMap = bankLogsMap;
 	}
-	 
+	
 
 }
