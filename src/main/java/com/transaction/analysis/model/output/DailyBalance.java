@@ -4,9 +4,7 @@
 package com.transaction.analysis.model.output;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import com.transaction.analysis.model.BankBase;
+import java.time.LocalDate;
 
 /**
  * @author Sankha
@@ -14,19 +12,18 @@ import com.transaction.analysis.model.BankBase;
  */
 public class DailyBalance {
 	
-	private String Day;
+	private LocalDate date;
+	private String currency;
 	private BigDecimal totalOutgoingAmount;
 	private Long outgoingCount;
 	private BigDecimal totalIncomingAmount;
 	private Long incomingCount;
-	private String currency;
-	private LocalDateTime date;
 	
 	
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
-	public void setDate(LocalDateTime date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -36,12 +33,6 @@ public class DailyBalance {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
-	}
-	public String getDay() {
-		return Day;
-	}
-	public void setDay(String day) {
-		Day = day;
 	}
 	public BigDecimal getTotalOutgoingAmount() {
 		return totalOutgoingAmount;

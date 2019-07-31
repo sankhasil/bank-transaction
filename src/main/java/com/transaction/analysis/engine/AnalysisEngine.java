@@ -5,6 +5,7 @@ package com.transaction.analysis.engine;
 
 import java.math.BigDecimal;
 import java.nio.file.FileSystems;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Currency;
@@ -30,7 +31,7 @@ public class AnalysisEngine {
 	private Map<String, List<BankLog>> bankLogsMap = new HashMap<>();
 
 	private List<Bank> banksList;
-	private Map<String, DailyBalance> dailyBalanceMap = new HashMap<>();
+	private Map<String, List<DailyBalance>> dailyBalanceMap = new HashMap<>();
 	private Map<String, List<Statistics>> statisticMap = new HashMap<>();
 
 	private AnalysisEngine() {
@@ -56,7 +57,7 @@ public class AnalysisEngine {
 		return banksList;
 	}
 
-	public Map<String, DailyBalance> getDailyBalanceMap() {
+	public Map<String, List<DailyBalance>> getDailyBalanceMap() {
 		return dailyBalanceMap;
 	}
 
@@ -75,15 +76,36 @@ public class AnalysisEngine {
 		Collections.sort(this.banksList);
 	}
 
-	public void analyzeDailyBalaceData(String inputPath) {
-//		for (Transaction trans : this.listOfTransaction) {
-//			String fullPath = inputPath + FileSystems.getDefault().getSeparator()
-//					+ trans.getLogFilePath().replaceFirst("./", "");
-//			transReader.readBankLogs(fullPath, trans.getBankCode());
-//		}
-		for (String bankCode : this.bankLogsMap.keySet()) {
-			List<BankLog> bankLog = this.bankLogsMap.get(bankCode);
-
+	public void analyzeDailyBalanceData() {
+		if (this.bankLogsMap.size() > 0) {
+			for (String bankCode : this.bankLogsMap.keySet()) {
+				Map<LocalDateTime, Double> outgoingAmountTotalByDate = this.bankLogsMap.get(bankCode).stream()
+						.collect(Collectors.groupingBy(BankLog::getDate, Collectors.summingDouble(bankLog -> {
+							if (bankLog.getTransactionSource().startsWith(bankCode))
+								return bankLog.getTransactionAmount().doubleValue();
+							return 0;
+						})));
+				
+				Map<LocalDateTime, Double> incomingAmountTotalByDate = this.bankLogsMap.get(bankCode).stream()
+						.collect(Collectors.groupingBy(BankLog::getDate, Collectors.summingDouble(bankLog -> {
+							if (bankLog.getTransactionDestination().startsWith(bankCode))
+								return bankLog.getTransactionAmount().doubleValue();
+							return 0;
+						})));
+				
+				List<DailyBalance> dailyBalanceList = new ArrayList<>();
+				for(LocalDateTime dateTime : incomingAmountTotalByDate.keySet()) {
+					DailyBalance dailyBalance = new DailyBalance();
+					dailyBalance.setCurrency("EUR");
+					dailyBalance.setDate(dateTime.toLocalDate());
+					dailyBalance.setIncomingCount(new Long(incomingAmountTotalByDate.size()));
+					dailyBalance.setTotalIncomingAmount(BigDecimal.valueOf(incomingAmountTotalByDate.get(dateTime)));
+					dailyBalance.setOutgoingCount(new Long(outgoingAmountTotalByDate.size()));
+					dailyBalance.setTotalOutgoingAmount(BigDecimal.valueOf(outgoingAmountTotalByDate.get(dateTime)));
+					dailyBalanceList.add(dailyBalance);
+				}
+				this.dailyBalanceMap.put(bankCode, dailyBalanceList);
+			}
 		}
 	}
 

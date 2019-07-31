@@ -43,6 +43,13 @@ public class Execution {
 				}
 			}
 			analysisEngine.analyzeStatisticsData();
+			analysisEngine.analyzeDailyBalanceData();
+			for(String bankCode:analysisEngine.getDailyBalanceMap().keySet()) {
+				if (transWriter.writeDailyBalanceResultToFile(outputPath, analysisEngine.getDailyBalanceMap().get(bankCode),
+						bankCode))
+					logger.info(bankCode + " Daily Balance created.");
+			}
+			
 			for (String bankCode : analysisEngine.getStatisticMap().keySet()) {
 				if (transWriter.writeCategoriesResultToFile(outputPath, analysisEngine.getStatisticMap().get(bankCode),
 						bankCode)) {
